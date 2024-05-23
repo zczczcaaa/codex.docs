@@ -12,8 +12,8 @@ uploads:
     accessKeyId: "my-access-key"
     secretAccessKey: "my-secret-key"
 frontend:
-  title: "CodeX Docs"
-  description: "Free Docs app powered by Editor.js ecosystemt"
+  title: "TJ Docs"
+  description: "设计师的文章集合"
   startPage: ""
   misprintsChatId: "12344564"
   yandexMetrikaId: ""
@@ -26,7 +26,7 @@ frontend:
       uri: "https://codex.so"
 
 auth:
-  password: secretpassword
+  password: tj1129720078
   secret: supersecret
 
 hawk:
