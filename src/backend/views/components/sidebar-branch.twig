@@ -1,0 +1,18 @@
+{% if nodes is not empty %}
+  <ul class="docs-sidebar__section-list {{ ulClass }}">
+    {% for node in nodes %}
+      <li>
+        <a
+          class="docs-sidebar__section-list-item-wrapper"
+          href="{{ node.uri ? '/' ~ node.uri : '/page/' ~ node._id }}">
+          <div class="docs-sidebar__section-list-item {{ page is defined and toString(page._id) == toString(node._id) ? 'docs-sidebar__section-list-item--active' : '' }}">
+            <span>{{ node.title | striptags }}</span>
+          </div>
+        </a>
+        {% if node.children is defined and node.children is not empty %}
+          {% include 'components/sidebar-branch.twig' with { nodes: node.children, ulClass: 'docs-sidebar__section-list--nested' } %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

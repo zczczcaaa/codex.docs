@@ -128,9 +128,15 @@ export default class Sidebar {
       return;
     }
 
-    const itemsCount = sectionList.children.length;
+    /**
+     * Section has overflow:hidden; max-height must fit nested lists or deeper levels get clipped.
+     */
+    requestAnimationFrame(() => {
+      const natural = sectionList.scrollHeight;
+      const fallback = sectionList.querySelectorAll('li').length * ITEM_HEIGHT;
 
-    sectionList.style.maxHeight = `${itemsCount * ITEM_HEIGHT}px`;
+      sectionList.style.maxHeight = `${Math.max(natural, fallback)}px`;
+    });
   }
 
   /**

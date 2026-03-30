@@ -87,6 +87,42 @@ class Pages {
   }
 
   /**
+   * Depth in parent chain: 0 for root pages, +1 per ancestor below root (for select indent).
+   */
+  private static computePageDepth(page: Page, pagesMap: Map<string, Page>): number {
+    let depth = 0;
+    let cur: Page | undefined = page;
+
+    while (cur?._parent && !isEqualIds(cur._parent, '0' as EntityId)) {
+      depth++;
+      cur = pagesMap.get(cur._parent.toString());
+    }
+
+    return depth;
+  }
+
+  /**
+   * Ordered pages for the parent `<select>` with visual nesting (indent = depth).
+   *
+   * @param excludePageId - when editing, exclude this page and its descendants (same as groupByParent)
+   */
+  public static async getParentSelectOptions(
+    excludePageId?: EntityId
+  ): Promise<Array<{ page: Page; depth: number; indent: string }>> {
+    const pages = excludePageId
+      ? await this.groupByParent(excludePageId)
+      : await this.groupByParent();
+    const pagesMap = await this.getPagesMap();
+    const indentUnit = '\u00a0\u00a0';
+
+    return pages.map((page) => {
+      const depth = Pages.computePageDepth(page, pagesMap);
+
+      return { page, depth, indent: indentUnit.repeat(depth) };
+    });
+  }
+
+  /**
    * Group all pages by their parents
    * If the pageId is passed, it excludes passed page from result pages
    *
