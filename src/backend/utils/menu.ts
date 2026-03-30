@@ -33,11 +33,11 @@ export function createMenuTree(
 
   if (childrenOrder) {
     ordered = childrenOrder.order.map((pageId: EntityId) => {
-      return pages.find((page) => isEqualIds(page._id, pageId));
+      return pages.find(page => isEqualIds(page._id, pageId));
     });
   }
 
-  const unordered = pages.filter((page) => isEqualIds(page._parent, parentPageId));
+  const unordered = pages.filter(page => isEqualIds(page._parent, parentPageId));
   const branch = Array.from(new Set([...ordered, ...unordered]));
 
   const canRecurse = currentDepth < maxDepth;
