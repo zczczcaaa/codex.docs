@@ -96,8 +96,10 @@ export default class SidebarFilter {
 
     // handle enter key when item is focused.
     if (e.code === 'Enter' && this.selectedSearchResultIndex !== null) {
-      // navigate to focused item.
-      this.searchResults[this.selectedSearchResultIndex].element.click();
+      const raw = this.searchResults[this.selectedSearchResultIndex].element;
+      const navigateEl = raw.closest('a') || raw;
+
+      navigateEl.click();
       // prevent default action.
       e.preventDefault();
       e.stopPropagation();

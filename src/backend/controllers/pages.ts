@@ -109,10 +109,9 @@ class Pages {
   public static async getParentSelectOptions(
     excludePageId?: EntityId
   ): Promise<Array<{ page: Page; depth: number; indent: string }>> {
-    const pages = excludePageId
-      ? await this.groupByParent(excludePageId)
-      : await this.groupByParent();
-    const pagesMap = await this.getPagesMap();
+    const { pages, pagesMap } = excludePageId
+      ? await this.groupByParentWithMap(excludePageId)
+      : await this.groupByParentWithMap('' as EntityId);
     const indentUnit = '\u00a0\u00a0';
 
     return pages.map((page) => {
@@ -123,13 +122,12 @@ class Pages {
   }
 
   /**
-   * Group all pages by their parents
-   * If the pageId is passed, it excludes passed page from result pages
-   *
-   * @param {string} pageId - pageId to exclude from result pages
-   * @returns {Page[]}
+   * Same as {@link groupByParent} but returns the pages map from the same load (no second getPagesMap).
    */
-  public static async groupByParent(pageId = '' as EntityId): Promise<Page[]> {
+  private static async groupByParentWithMap(pageId = '' as EntityId): Promise<{
+    pages: Page[];
+    pagesMap: Map<string, Page>;
+  }> {
     const rootPageOrder = await PagesOrder.getRootPageOrder(); // get order of the root pages
     const childPageOrder = await PagesOrder.getChildPageOrder(); // get order of the all other pages
 
@@ -137,7 +135,7 @@ class Pages {
      * If there is no root and child page order, then it returns an empty array
      */
     if (!rootPageOrder || (!rootPageOrder && childPageOrder.length <= 0)) {
-      return [];
+      return { pages: [], pagesMap: new Map() };
     }
 
     const pagesMap = await this.getPagesMap();
@@ -176,16 +174,31 @@ class Pages {
      * Otherwise just returns result itself
      */
     if (pageId) {
-      return this.removeChildren(result, pageId).reduce((prev, curr) => {
+      const pages = this.removeChildren(result, pageId).reduce((prev, curr) => {
         if (curr instanceof Page) {
           prev.push(curr);
         }
 
         return prev;
       }, Array<Page>());
-    } else {
-      return result;
+
+      return { pages, pagesMap };
     }
+
+    return { pages: result, pagesMap };
+  }
+
+  /**
+   * Group all pages by their parents
+   * If the pageId is passed, it excludes passed page from result pages
+   *
+   * @param {string} pageId - pageId to exclude from result pages
+   * @returns {Page[]}
+   */
+  public static async groupByParent(pageId = '' as EntityId): Promise<Page[]> {
+    const { pages } = await this.groupByParentWithMap(pageId);
+
+    return pages;
   }
 
   /**

@@ -8,6 +8,11 @@ const LOCAL_STORAGE_KEY = 'docs_sidebar_state';
 const SIDEBAR_VISIBILITY_KEY = 'docs_sidebar_visibility';
 
 /**
+ * Slack beyond scrollHeight + vertical borders for max-height (subpixels, hover radius).
+ */
+const SIDEBAR_LIST_MAX_HEIGHT_SLACK_PX = 4;
+
+/**
  * Sidebar module
  */
 export default class Sidebar {
@@ -94,7 +99,7 @@ export default class Sidebar {
       this.nodes.rootSections,
       this.nodes.sidebarContent,
       this.nodes.search,
-      this.setSectionCollapsed
+      this.setSectionCollapsed.bind(this)
     );
 
     this.ready();
@@ -150,7 +155,12 @@ export default class Sidebar {
         if (!list) {
           return;
         }
-        list.style.maxHeight = `${list.scrollHeight + 4}px`;
+        const cs = globalThis.getComputedStyle(list);
+        const borderY =
+          (Number.parseFloat(cs.borderTopWidth) || 0) +
+          (Number.parseFloat(cs.borderBottomWidth) || 0);
+
+        list.style.maxHeight = `${list.scrollHeight + borderY + SIDEBAR_LIST_MAX_HEIGHT_SLACK_PX}px`;
       });
     });
   }
