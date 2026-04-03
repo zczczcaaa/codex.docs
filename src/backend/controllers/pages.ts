@@ -102,23 +102,21 @@ class Pages {
   }
 
   /**
-   * Ordered pages for the parent `<select>` with visual nesting (indent = depth).
+   * Ordered pages for the parent `<select>` with nesting depth (indent in the template).
    *
    * @param excludePageId - when editing, exclude this page and its descendants (same as groupByParent)
    */
   public static async getParentSelectOptions(
     excludePageId?: EntityId
-  ): Promise<Array<{ page: Page; depth: number; indent: string }>> {
+  ): Promise<Array<{ page: Page; depth: number }>> {
     const { pages, pagesMap } = excludePageId
       ? await this.groupByParentWithMap(excludePageId)
       : await this.groupByParentWithMap('' as EntityId);
-    const indentUnit = '\u00a0\u00a0';
 
-    return pages.map((page) => {
-      const depth = Pages.computePageDepth(page, pagesMap);
-
-      return { page, depth, indent: indentUnit.repeat(depth) };
-    });
+    return pages.map((page) => ({
+      page,
+      depth: Pages.computePageDepth(page, pagesMap),
+    }));
   }
 
   /**

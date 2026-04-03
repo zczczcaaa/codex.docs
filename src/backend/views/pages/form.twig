@@ -30,7 +30,10 @@
               {% set _page = entry.page %}
               {% if toString(_page._id) != toString(currentPageId) %}
                 <option value="{{ toString(_page._id) }}" {{ page is not empty and toString(page._parent) == toString(_page._id) ? 'selected' : ''}}>
-                  {{- entry.indent -}}{{- _page.title -}}
+                  {%- if entry.depth > 0 -%}
+                    {%- for _ in 1..entry.depth %}&nbsp;&nbsp;{% endfor -%}
+                  {%- endif -%}
+                  {{- _page.title|striptags -}}
                 </option>
               {% endif %}
             {% endfor %}
@@ -42,7 +45,7 @@
             <select id="above" name="above">
               <option value="0">—</option>
               {% for _page in parentsChildrenOrdered %}
-                <option value="{{ toString(_page._id) }}">{{ _page.title }}</option>
+                <option value="{{ toString(_page._id) }}">{{ _page.title|striptags }}</option>
               {% endfor %}
             </select>
           </div>
