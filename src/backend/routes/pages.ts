@@ -5,6 +5,7 @@ import verifyToken from './middlewares/token.js';
 import allowEdit from './middlewares/locals.js';
 import PagesFlatArray from '../models/pagesFlatArray.js';
 import { toEntityId } from '../database/index.js';
+import { buildPageBreadcrumbs } from '../utils/breadcrumbs.js';
 
 const router = express.Router();
 
@@ -62,14 +63,14 @@ router.get('/page/:id', verifyToken, async (req: Request, res: Response, next: N
   try {
     const page = await Pages.get(pageId);
 
-    const pageParent = await page.parent;
+    const breadcrumbItems = await buildPageBreadcrumbs(page);
 
     const previousPage = await PagesFlatArray.getPageBefore(pageId);
     const nextPage = await PagesFlatArray.getPageAfter(pageId);
 
     res.render('pages/page', {
       page,
-      pageParent,
+      breadcrumbItems,
       config: req.app.locals.config,
       previousPage,
       nextPage,
