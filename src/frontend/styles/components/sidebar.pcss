@@ -123,23 +123,6 @@
       margin-top: 2px;
     }
 
-    &--leaf {
-      .docs-sidebar__section-title {
-        font-size: 14px;
-        line-height: 21px;
-        height: 29px;
-
-        @media (--mobile) {
-          font-size: 16px;
-          line-height: 21px;
-        }
-      }
-
-      .docs-sidebar__section-title--active {
-        color: white;
-      }
-    }
-
     &--hidden {
       display: none;
     }
@@ -204,9 +187,28 @@
     }
   }
 
-  /* Top-level sidebar rows only: always bold (with or without children). Nested levels stay 400. */
+  /*
+   * Two typography tiers:
+   * - Root (1st level): 16px / 24 / 34px row, bold — same for branches and single links.
+   * - Nested: one shared style for all deeper levels (branches + leaves).
+   */
   &__content > .docs-sidebar__section > .docs-sidebar__section-title-wrapper > .docs-sidebar__section-title {
+    font-size: 16px;
+    line-height: 24px;
+    height: 34px;
     font-weight: 700;
+  }
+
+  .docs-sidebar__section--nested .docs-sidebar__section-title {
+    font-size: 14px;
+    line-height: 21px;
+    height: 29px;
+    font-weight: 400;
+
+    @media (--mobile) {
+      font-size: 16px;
+      line-height: 21px;
+    }
   }
 
   /* Tighter gap between root items when the previous section is collapsed. */
