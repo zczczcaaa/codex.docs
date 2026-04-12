@@ -202,10 +202,16 @@
       /* plain radius: --squircle uses mask-box-image and gets clipped by overflow:hidden on ancestors */
       border-radius: 8px;
     }
+  }
 
-    &:has(.docs-sidebar__section-toggler) {
-      font-weight: 700;
-    }
+  /* Top-level sidebar rows only: always bold (with or without children). Nested levels stay 400. */
+  &__content > .docs-sidebar__section > .docs-sidebar__section-title-wrapper > .docs-sidebar__section-title {
+    font-weight: 700;
+  }
+
+  /* Tighter gap between root items when the previous section is collapsed. */
+  &__content > .docs-sidebar__section--collapsed + .docs-sidebar__section {
+    margin-top: 12px;
   }
 
   &__section-title > span {
