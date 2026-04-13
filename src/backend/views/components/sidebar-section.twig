@@ -1,9 +1,9 @@
 {% set is_leaf = node.children is not defined or node.children is empty %}
-<section class="docs-sidebar__section{{ nested ? ' docs-sidebar__section--nested' : '' }}{{ is_leaf ? ' docs-sidebar__section--leaf' : '' }}" data-id="{{ node._id }}">
+<section class="docs-sidebar__section{{ nested ? ' docs-sidebar__section--nested' : ' docs-sidebar__section--root' }}{{ is_leaf ? ' docs-sidebar__section--leaf' : '' }}" data-id="{{ node._id }}">
   <a class="docs-sidebar__section-title-wrapper"
     href="{{ node.uri ? '/' ~ node.uri : '/page/' ~ node._id }}"
   >
-    <div class="docs-sidebar__section-title {{ page is defined and toString(page._id) == toString(node._id) ? 'docs-sidebar__section-title--active' : '' }}">
+    <div class="docs-sidebar__section-title{% if not nested %} docs-sidebar__section-title--root{% endif %}{% if page is defined and toString(page._id) == toString(node._id) %} docs-sidebar__section-title--active{% endif %}">
       <span>
         {{ node.title | striptags }}
       </span>
