@@ -123,23 +123,6 @@
       margin-top: 2px;
     }
 
-    &--leaf {
-      .docs-sidebar__section-title {
-        font-size: 14px;
-        line-height: 21px;
-        height: 29px;
-
-        @media (--mobile) {
-          font-size: 16px;
-          line-height: 21px;
-        }
-      }
-
-      .docs-sidebar__section-title--active {
-        color: white;
-      }
-    }
-
     &--hidden {
       display: none;
     }
@@ -202,10 +185,28 @@
       /* plain radius: --squircle uses mask-box-image and gets clipped by overflow:hidden on ancestors */
       border-radius: 8px;
     }
+  }
 
-    &:has(.docs-sidebar__section-toggler) {
-      font-weight: 700;
+  /* 1st-level title row (see sidebar-section.twig: --root). */
+  &__section-title--root {
+    font-weight: 700;
+  }
+
+  /* Deeper levels: one style for all nested items. */
+  &__section--nested &__section-title {
+    font-size: 14px;
+    line-height: 21px;
+    height: 29px;
+    font-weight: 400;
+
+    @media (--mobile) {
+      font-size: 16px;
+      line-height: 21px;
     }
+  }
+
+  .docs-sidebar__section--root.docs-sidebar__section--collapsed + .docs-sidebar__section--root {
+    margin-top: 12px;
   }
 
   &__section-title > span {
